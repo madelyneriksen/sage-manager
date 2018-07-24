@@ -35,6 +35,7 @@ def encrypt_passwd(passwd: str, key: str) -> str:
                             passphrase=key, encrypt=False)
     return base64.b64encode(encrypted.data).decode()
 
+
 def decrypt_passwd(passwd: str, key: str) -> str:
     """
     Decrypt the passwd with the provided key.
@@ -59,4 +60,8 @@ def create_passwd(length=24) -> str:
     Returns:
         passwd: (Length) character string of letters, digits, and punctuation
     """
-    pass
+    alpha = string.ascii_letters + string.digits + string.punctuation
+    passwd = "".join(
+        [random.SystemRandom().choice(alpha) for i in range(length)]
+    )
+    return passwd
