@@ -20,7 +20,7 @@ GPG = gnupg.GPG()
 
 
 
-def encrypt_passwd(passwd: string, key: string) -> str:
+def encrypt_passwd(passwd: str, key: str) -> str:
     """
     Encrypt the generated password with the provided key. (A key is essentially
     another password.)
@@ -35,7 +35,7 @@ def encrypt_passwd(passwd: string, key: string) -> str:
                             passphrase=key, encrypt=False)
     return base64.b64encode(encrypted.data).decode()
 
-def decrypt_passwd(passwd: string, key: string) -> str:
+def decrypt_passwd(passwd: str, key: str) -> str:
     """
     Decrypt the passwd with the provided key.
 
@@ -47,3 +47,16 @@ def decrypt_passwd(passwd: string, key: string) -> str:
     """
     decrypted = GPG.decrypt(base64.b64decode(passwd), passphrase=key)
     return decrypted.data.decode()
+
+
+def create_passwd(length=24) -> str:
+    """
+    Create a password that is (length) long using the cryptographically
+    secure system RNG.
+
+    Arguments:
+        length: Number of desired characters, Interger. Default 24.
+    Returns:
+        passwd: (Length) character string of letters, digits, and punctuation
+    """
+    pass

@@ -4,7 +4,7 @@ Test the encryption functions of SageManager
 
 
 import pytest
-from sagemanager.crypto import encrypt_passwd, decrypt_passwd
+from sagemanager.crypto import encrypt_passwd, decrypt_passwd, create_passwd
 
 
 def test_encryption():
@@ -22,3 +22,15 @@ def test_encryption():
     assert encrypted != passwd
     assert decrypted == passwd
     assert bad_decrypted != passwd
+
+
+def test_passwd_gen():
+    """
+    Test the password creation function.
+    """
+    passwd = create_passwd()
+    short_passwd = create_passwd(length=8)
+    assert isinstance(passwd, str)
+    assert isinstance(short_passwd, str)
+    assert len(short_passwd) == 8
+    assert len(passwd) == 24
