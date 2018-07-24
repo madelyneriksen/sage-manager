@@ -15,6 +15,11 @@ import base64
 import gnupg
 
 
+# Constants
+GPG = gnupg.GPG()
+
+
+
 def encrypt_passwd(passwd: string, key: string) -> str:
     """
     Encrypt the generated password with the provided key. (A key is essentially
@@ -26,7 +31,9 @@ def encrypt_passwd(passwd: string, key: string) -> str:
     Returns:
         encrypted: A base64 string that's the encoded password.
     """
-    pass
+    encrypted = GPG.encrypt(passwd, symmetric=True,
+                            passphrase=key, encrypt=False)
+    return base64.b64encode(encrypted.data).decode()
 
 def decrypt_passwd(passwd: string, key: string) -> str:
     """
@@ -38,4 +45,5 @@ def decrypt_passwd(passwd: string, key: string) -> str:
     Returns:
         decrypted: Decrypted password, in utf-8
     """
-    pass
+    decrypted = GPG.decrypt(base64.b64decode(passwd), passphrase=key)
+    return decrypted.data.decode()
