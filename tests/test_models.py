@@ -9,11 +9,13 @@ Thankfully, fixtures are an awesome feature of pytest!
 """
 
 
+import os
 import peewee as pw
+import pytest
 from sagemanager.models import SageManager
 
 
-@pytest.fixture(scope=module)
+@pytest.fixture(scope="module")
 def sqlite_db():
     """
     Database manager that oversees teardowns and cleanup.
