@@ -19,10 +19,6 @@ def sqlite_db():
     """
     Database manager that oversees teardowns and cleanup.
 
-    This allows us to persist the same database over the course of the tests,
-    which while not strictly a unit test is still useful for overseeing the
-    CRUD calls that need to be made.
-
     Yields:
         database: An sqlite database for testing
     """
