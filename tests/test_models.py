@@ -10,9 +10,8 @@ Thankfully, fixtures are an awesome feature of pytest!
 
 
 import os
-import peewee as pw
 import pytest
-from sagemanager.models import SageManager
+import sagemanager.models as smm
 
 
 @pytest.fixture(scope="module")
@@ -27,22 +26,56 @@ def sqlite_db():
     Yields:
         database: An sqlite database for testing
     """
-    database = pw.SqliteDatabase("test.db")
-    yield database
+    smm.init_db("test.db")
+    yield smm.DATABASE
     os.remove("test.db")
 
 
 def test_creation(sqlite_db):
-    pass
+    """
+    Test the creation of passwords. The password is module level, so tests
+    in the future can use the same password.
+    """
+    new_pass = "TheNewPassword"
+    site = "www.example.com"
+    response = smm.create_passwd(site, new_pass)
+    assert response
+    # Make sure we can't create twice.
+    bad_response = smm.create_passwd(site, new_pass)
+    assert not bad_response
 
 
 def test_read(sqlite_db):
-    pass
-
-
-def test_removal(sqlite_db):
-    pass
+    """
+    Test the reading of passwords.
+    """
+    site = "www.example.com"
+    passwd = smm.read_passwd(site)
+    assert passwd == "TheNewPassword"
+    bad_request = smm.read_passwd("NotASite")
+    assert not bad_request
 
 
 def test_update(sqlite_db):
-    pass
+    """
+    Test the updating of passwords
+    """
+    updated_pass = "TheUpdatedPassword"
+    site = "www.example.com"
+    response = smm.update_passwd(site, updated_pass)
+    assert response
+    assert smm.read_passwd(site) == updated_pass
+    bad_response = smm.update_passwd("NotASite", updated_pass)
+    assert not bad_response
+
+
+def test_removal(sqlite_db):
+    """
+    Test the removal of passwords.
+    """
+    site = "www.example.com"
+    response = smm.remove_passwd(site)
+    assert response
+    bad_response = smm.remove_passwd(site)
+    assert not bad_response
+    assert not smm.read_passwd(site)
