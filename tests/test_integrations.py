@@ -35,7 +35,7 @@ def validate_passwd(passwd: str) -> bool:
     Quick helper function for password validation.
     """
     alpha = string.ascii_letters + string.digits + string.punctuation
-    checker = passwd.split('')
+    checker = list(passwd)
     return all([i in alpha for i in checker])
 
 
@@ -43,7 +43,9 @@ def test_authorization(sqlite_db):
     """
     Create a token and use it to authorize.
     """
+    assert not integrate.check_token()
     assert integrate.store_token(KEY)
+    assert integrate.check_token()
     assert integrate.verify_passwd(KEY)
     assert not integrate.verify_passwd("NotAPassword")
 
@@ -64,7 +66,7 @@ def test_get_passwd(sqlite_db):
     assert result
     if result:
         clipboard = pyperclip.paste()
-        assert validate_password(clipboard)
+        assert validate_passwd(clipboard)
     assert not integrate.get_encrypted_passwd(SITE, "WrongKey")
     assert not integrate.get_encrypted_passwd("WrongSite", KEY)
 
@@ -81,6 +83,3 @@ def test_update_passwd(sqlite_db):
     assert new_passwd != old_passwd
     assert not integrate.update_encrypted_passwd(SITE, "WrongKey")
     assert not integrate.update_encrypted_passwd("WrongSite", "WrongKey")
-
-
-
