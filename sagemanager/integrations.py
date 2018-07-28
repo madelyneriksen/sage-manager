@@ -68,6 +68,8 @@ def get_key() -> str:
         passwd_second = getpass("Retype Password:")
         if passwd_first == passwd_second:
             return passwd_first
+        else:
+            print("Passwords don't match!")
 
 
 def get_encrypted_passwd(site_name: str, key: str) -> bool:
